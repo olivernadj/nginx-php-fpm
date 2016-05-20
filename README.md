@@ -99,17 +99,6 @@ If you wish to install extras at boot time, such as extra php modules you can sp
 ```
 sudo docker run --name nginx -e 'DEBS=php5-mongo php-json" -p 8080:80 -d richarvey/nginx-php-fpm
 ```
-### Templating
-This container will automatically configure your web application if you template your code. For example if you are linking to MySQL like above, and you have a config.php file where you need to set the MySQL details include $$_MYSQL_ENV_MYSQL_DATABASE_$$ style template tags.
-
-Example:
-```
-<?php
-database_name = $$_MYSQL_ENV_MYSQL_DATABASE_$$;
-database_host = $$_MYSQL_PORT_3306_TCP_ADDR_$$;
-...
-?>
-```
 ### Using environment variables
 If you want to link to an external MySQL DB and not using linking you can pass variables directly to the container that will be automatically configured by the container.
 
@@ -133,10 +122,10 @@ database_pass = $$_MYSQL_PASS_$$
 ...
 ?>
 ```
-### Enable Templating
-In order to speed up boot time templating is now diabled by default, if you wish to enable it simply include the flag below:
+### Register $_ENV
+$_ENV is only populated if php.ini allows it, which it doesn't seem to do by default, at least not in the default WAMP server installation.
 ```
--e TEMPLATE_NGINX_HTML=1
+-e REGISTER_ENV=1
 ```
 ### Template anything
 Yes ***ANYTHING***, any variable exposed by a linked container or the **-e** flag lets you template your configuration files. This means you can add redis, mariaDB, memcache or anything you want to your application very easily.

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Disable Strict Host checking for non interactive git clones
 
@@ -42,18 +42,19 @@ fi
 procs=$(cat /proc/cpuinfo |grep processor | wc -l)
 sed -i -e "s/worker_processes 5/worker_processes $procs/" /etc/nginx/nginx.conf
 
-# Very dirty hack to replace variables in code with ENVIRONMENT values
-if [[ "$TEMPLATE_NGINX_HTML" == "1" ]] ; then
-  for i in $(env)
+# Let's register $_ENV when PHP starts up
+if [[ "$REGISTER_ENV" == "1" ]] && [ ! -f /etc/nginx/env_params ]; then
+  for i in $(env | grep _)
   do
-    variable=$(echo "$i" | cut -d'=' -f1)
-    value=$(echo "$i" | cut -d'=' -f2)
     if [[ "$variable" != '%s' ]] ; then
-      replace='\$\$_'${variable}'_\$\$'
-      find /usr/share/nginx/html -type f -exec sed -i -e 's/'${replace}'/'${value}'/g' {} \;
+      variable=$(echo "$i" | cut -d'=' -f1)
+      value=$(echo "$i" | cut -d'=' -f2)
+      echo -e "fastcgi_param\t$variable\t'$value';" >> /etc/nginx/env_params
     fi
   done
+  sed -i -e "s/variables_order =.*/variables_order = \"EGPCS\"/g" /etc/php5/fpm/php.ini
 fi
+touch /etc/nginx/env_params
 
 # Again set the right permissions (needed when mounting from a volume)
 chown -Rf www-data.www-data /usr/share/nginx/html/
