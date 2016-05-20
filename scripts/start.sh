@@ -43,7 +43,8 @@ procs=$(cat /proc/cpuinfo |grep processor | wc -l)
 sed -i -e "s/worker_processes 5/worker_processes $procs/" /etc/nginx/nginx.conf
 
 # Let's register $_ENV when PHP starts up
-if [[ "$REGISTER_ENV" == "1" ]] && [ ! -f /etc/nginx/env_params ]; then
+echo '' > /etc/nginx/env_params
+if [[ "$REGISTER_ENV" == "1" ]]; then
   for i in $(env | grep _)
   do
     if [[ "$variable" != '%s' ]] ; then
@@ -54,7 +55,6 @@ if [[ "$REGISTER_ENV" == "1" ]] && [ ! -f /etc/nginx/env_params ]; then
   done
   sed -i -e "s/variables_order =.*/variables_order = \"EGPCS\"/g" /etc/php5/fpm/php.ini
 fi
-touch /etc/nginx/env_params
 
 # Again set the right permissions (needed when mounting from a volume)
 chown -Rf www-data.www-data /usr/share/nginx/html/
