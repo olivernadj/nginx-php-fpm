@@ -1,5 +1,5 @@
 FROM ubuntu:14.04.4
-MAINTAINER Ric Harvey <ric@ngineered.co.uk>
+#Thanks for Ric Harvey <ric@ngineered.co.uk>
 MAINTAINER Oliver Nadj <mr.oliver.nadj@gmail.com>
 
 # Surpress Upstart errors/warning

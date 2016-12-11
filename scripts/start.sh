@@ -20,17 +20,6 @@ if [ ! -z "$DEBS" ]; then
  apt-get install -y $DEBS
 fi
 
-# Pull down code form git for our site!
-if [ ! -z "$GIT_REPO" ]; then
-  rm /usr/share/nginx/html/*
-  if [ ! -z "$GIT_BRANCH" ]; then
-    git clone -b $GIT_BRANCH $GIT_REPO /usr/share/nginx/html/
-  else
-    git clone $GIT_REPO /usr/share/nginx/html/
-  fi
-  chown -Rf nginx.nginx /usr/share/nginx/*
-fi
-
 # Display PHP error's or not
 if [[ "$ERRORS" != "1" ]] ; then
   sed -i -e "s/error_reporting =.*=/error_reporting = E_ALL/g" /etc/php5/fpm/php.ini
