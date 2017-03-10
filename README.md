@@ -16,7 +16,9 @@ The Docker hub build can be found here: [https://registry.hub.docker.com/u/olive
 To build from source you need to clone the git repo and run docker build:
 ```
 git clone https://github.com/olivernadj/nginx-php-fpm-for-fexcore-legacy.git
-docker build -t olivernadj/nginx-php-fpm-for-fexcore-legacy:latest .
+docker build -t nginx-php-fpm-for-fexcore-legacy .
+docker tag nginx-php-fpm-for-fexcore-legacy olivernadj/nginx-php-fpm-for-fexcore-legacy
+docker push olivernadj/nginx-php-fpm-for-fexcore-legacy
 ```
 ## Pulling from Docker Hub
 Pull the image from docker hub rather than downloading the git repo. This prevents you having to build the image on every docker host:
